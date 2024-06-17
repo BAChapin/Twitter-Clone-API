@@ -74,14 +74,14 @@ router.get('/users/:id', async (req, res) => {
 router.post('/users/me/avatar', upload.single('avatar'), async (req, res) => {
     const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250}).png().toBuffer()
 
-    // if (req.user.avatar != null) {
-    //     req.user.avatar = null
-    //     req.user.avatarExists = false
-    // }
+    if (req.user.avatar != null) {
+        req.user.avatar = null
+        req.user.avatarExists = false
+    }
 
-    // req.user.avatar = buffer
-    // req.user.avatarExists = true
-    // await req.user.save()
+    req.user.avatar = buffer
+    req.user.avatarExists = true
+    await req.user.save()
 
     res.send(buffer)
 }, (error, req, res, next) => {
