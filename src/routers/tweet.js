@@ -18,4 +18,18 @@ router.post('/tweets', auth, async (req, res) => {
     }
 })
 
+router.get('/tweets', async (req, res) => {
+    try {
+        const tweets = await Tweet.find({})
+
+        if (!tweets) {
+            return res.status(404).send()
+        }
+
+        res.status(200).send(tweets)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 module.exports = router
