@@ -1,6 +1,14 @@
 const express = require('express')
 const Tweet = require('./../models/tweet')
 const auth = require('./../middleware/auth')
+const multer = require('multer')
+const sharp = require('sharp')
+
+const upload = multer({
+    limits: {
+        fileSize: 100_000_000
+    }
+})
 
 const router = new express.Router()
 
@@ -30,6 +38,23 @@ router.get('/tweets', async (req, res) => {
     } catch (error) {
         res.status(500).send(error)
     }
+})
+
+router.post('/uploadTweetImage/:id', auth, upload.single('upload'), async (req, res) => {
+    const tweet = await Tweet.findById(req.params.id)
+
+    if (!tweet) {
+        throw new Error('Cannot find the Tweet')
+    }
+
+    const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer()
+
+    tweet.image = buffer
+    await tweet.save()
+
+    res.status(200).send()
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
 })
 
 module.exports = router
