@@ -102,4 +102,18 @@ router.put('/tweets/:id/unlike', auth, async (req, res) => {
     }
 })
 
+router.get('/tweets/:id', async (req, res) => {
+    try {
+        const tweet = await Tweet.find({ user: req.params.id })
+
+        if (!tweet) {
+            return res.status(404).send()
+        }
+
+        res.status(200).send(tweet)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 module.exports = router
