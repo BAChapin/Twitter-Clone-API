@@ -31,8 +31,6 @@ const tweetSchema = new mongoose.Schema({
     timestamps: true
 })
 
-const Tweet = mongoose.model("Tweet", tweetSchema)
-
 tweetSchema.methods.toJSON = function() {
     const tweet = this
 
@@ -44,5 +42,7 @@ tweetSchema.methods.toJSON = function() {
 
     return tweetObject
 }
+
+const Tweet = mongoose.model("Tweet", tweetSchema)
 
 module.exports = Tweet
