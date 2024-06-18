@@ -73,4 +73,19 @@ router.get('/tweets/:id/image', async (req, res) => {
     }
 })
 
+router.put('/tweets/:id/like', auth, async (req, res) => {
+    try {
+        const tweet = await Tweet.findById(req.params.id)
+        if (!tweet.likes.includes(req.user.id)) {
+            await tweet.updateOne({ $push: { likes: req.user.id }})
+            res.status(200).send("Post has been liked")
+        } else {
+            res.status(403).send("You have already liked this Tweet")
+        }
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 module.exports = router
